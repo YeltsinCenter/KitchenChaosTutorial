@@ -3,6 +3,7 @@ using UnityEngine;
 public class Player1 : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 7f;
+    [SerializeField] private float rotationSpeed = 10f;
     void Start()
     {
         
@@ -36,5 +37,7 @@ public class Player1 : MonoBehaviour
 
         // Задаем GO движение
         transform.position += inputVector3 * Time.deltaTime * moveSpeed;
+
+        transform.forward = Vector3.Slerp(transform.forward, inputVector3, Time.deltaTime * rotationSpeed);
     }
 }
