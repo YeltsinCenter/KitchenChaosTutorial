@@ -4,6 +4,8 @@ public class Player1 : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private float rotationSpeed = 10f;
+    [SerializeField] private GameInput gameInput;
+
     private bool isWalking;
     void Start()
     {
@@ -12,36 +14,14 @@ public class Player1 : MonoBehaviour
 
     void Update()
     {
-        // Задаем вектор в состоянии покоя
-        Vector3 inputVector3 = new Vector3(0, 0, 0);
+        Vector3 movementVector3 = gameInput.GetMovementVectorNormalized();
 
-        // Принимаем ввод игрока
-        if (Input.GetKey(KeyCode.W))
-        {
-            inputVector3.z = +1;
-        }
-        if (Input.GetKey(KeyCode.S)) 
-        {
-            inputVector3.z = -1;
-        }
-        if (Input.GetKey(KeyCode.D)) 
-        {
-            inputVector3.x = +1;
-        }
-        if (Input.GetKey(KeyCode.A)) 
-        {
-            inputVector3.x = -1;
-        }
+        isWalking = movementVector3 != Vector3.zero;
 
-        isWalking = inputVector3 != Vector3.zero;
+                // Задаем GO движение
+        transform.position += movementVector3 * Time.deltaTime * moveSpeed;
 
-        // Нормализуем вектор
-        inputVector3 = inputVector3.normalized;
-
-        // Задаем GO движение
-        transform.position += inputVector3 * Time.deltaTime * moveSpeed;
-
-        transform.forward = Vector3.Slerp(transform.forward, inputVector3, Time.deltaTime * rotationSpeed);
+        transform.forward = Vector3.Slerp(transform.forward, movementVector3, Time.deltaTime * rotationSpeed);
     }
 
     public bool IsWalking()
